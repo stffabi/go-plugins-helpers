@@ -106,20 +106,18 @@ func initMux(ipam Ipam, h *sdk.Handler) {
 	h.HandleFunc(capabilitiesPath, func(w http.ResponseWriter, r *http.Request) {
 		res, err := ipam.GetCapabilities()
 		if err != nil {
-			msg := err.Error()
-			sdk.EncodeResponse(w, NewErrorResponse(msg), msg)
+			sdk.EncodeResponse(w, NewErrorResponse(err.Error()), true)
 			return
 		}
-		sdk.EncodeResponse(w, res, "")
+		sdk.EncodeResponse(w, res, false)
 	})
 	h.HandleFunc(addressSpacesPath, func(w http.ResponseWriter, r *http.Request) {
 		res, err := ipam.GetDefaultAddressSpaces()
 		if err != nil {
-			msg := err.Error()
-			sdk.EncodeResponse(w, NewErrorResponse(msg), msg)
+			sdk.EncodeResponse(w, NewErrorResponse(err.Error()), true)
 			return
 		}
-		sdk.EncodeResponse(w, res, "")
+		sdk.EncodeResponse(w, res, false)
 	})
 	h.HandleFunc(requestPoolPath, func(w http.ResponseWriter, r *http.Request) {
 		req := &RequestPoolRequest{}
@@ -129,11 +127,10 @@ func initMux(ipam Ipam, h *sdk.Handler) {
 		}
 		res, err := ipam.RequestPool(req)
 		if err != nil {
-			msg := err.Error()
-			sdk.EncodeResponse(w, NewErrorResponse(msg), msg)
+			sdk.EncodeResponse(w, NewErrorResponse(err.Error()), true)
 			return
 		}
-		sdk.EncodeResponse(w, res, "")
+		sdk.EncodeResponse(w, res, false)
 	})
 	h.HandleFunc(releasePoolPath, func(w http.ResponseWriter, r *http.Request) {
 		req := &ReleasePoolRequest{}
@@ -143,11 +140,10 @@ func initMux(ipam Ipam, h *sdk.Handler) {
 		}
 		err = ipam.ReleasePool(req)
 		if err != nil {
-			msg := err.Error()
-			sdk.EncodeResponse(w, NewErrorResponse(msg), msg)
+			sdk.EncodeResponse(w, NewErrorResponse(err.Error()), true)
 			return
 		}
-		sdk.EncodeResponse(w, make(map[string]string), "")
+		sdk.EncodeResponse(w, struct{}{}, false)
 	})
 	h.HandleFunc(requestAddressPath, func(w http.ResponseWriter, r *http.Request) {
 		req := &RequestAddressRequest{}
@@ -157,11 +153,10 @@ func initMux(ipam Ipam, h *sdk.Handler) {
 		}
 		res, err := ipam.RequestAddress(req)
 		if err != nil {
-			msg := err.Error()
-			sdk.EncodeResponse(w, NewErrorResponse(msg), msg)
+			sdk.EncodeResponse(w, NewErrorResponse(err.Error()), true)
 			return
 		}
-		sdk.EncodeResponse(w, res, "")
+		sdk.EncodeResponse(w, res, false)
 	})
 	h.HandleFunc(releaseAddressPath, func(w http.ResponseWriter, r *http.Request) {
 		req := &ReleaseAddressRequest{}
@@ -171,9 +166,9 @@ func initMux(ipam Ipam, h *sdk.Handler) {
 		}
 		err = ipam.ReleaseAddress(req)
 		if err != nil {
-			msg := err.Error()
-			sdk.EncodeResponse(w, NewErrorResponse(msg), msg)
+			sdk.EncodeResponse(w, NewErrorResponse(err.Error()), true)
+			return
 		}
-		sdk.EncodeResponse(w, make(map[string]string), "")
+		sdk.EncodeResponse(w, struct{}{}, false)
 	})
 }
